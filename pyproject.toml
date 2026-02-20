@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "daily-todo"
-version = "0.1.0"
+version = "0.2.0"
 description = "Daily TODO CLI：Markdown 日程 + LLM 生成/更新/总结"
 readme = "README.md"
 requires-python = ">=3.12"

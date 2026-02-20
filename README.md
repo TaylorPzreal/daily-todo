@@ -14,7 +14,7 @@ Daily TODO CLI：在环境变量指定的目录下管理按日期命名的 Markd
 | 变量              | 说明                                                                |
 | ----------------- | ------------------------------------------------------------------- |
 | `DAILY_TODO_DIR`  | 存放每日 Markdown 的目录；未设置时使用当前目录下的 `./daily-todo`。 |
-| `OPENAI_API_KEY`  | **必填**。OpenAI 或兼容 API 的密钥（如 DeepSeek、Friday 等）。      |
+| `OPENAI_API_KEY`  | **必填**。OpenAI 或兼容 API 的密钥（如 DeepSeek、OpenAI 等）。      |
 | `OPENAI_BASE_URL` | 可选。API 地址，例如 `https://api.deepseek.com`。                   |
 | `OPENAI_MODEL`    | 可选。模型名，默认 `gpt-4o-mini`。                                  |
 
@@ -32,12 +32,12 @@ OPENAI_MODEL=deepseek-chat
 
 ## 安装与运行
 
-### 方式一：本机全局命令（推荐，无需发布）
+### 方式一：本机全局命令（源码方式）
 
 在项目目录下**可编辑安装**，之后在任意目录可用 `daily-todo` 命令：
 
 ```bash
-cd app-demo/daily-todo
+cd daily-todo
 uv sync
 uv pip install -e .
 ```
@@ -45,7 +45,7 @@ uv pip install -e .
 或使用 pip：
 
 ```bash
-cd app-demo/daily-todo
+cd daily-todo
 pip install -e .
 ```
 
@@ -62,14 +62,12 @@ daily-todo update "新增任务xxx"
 ### 方式二：不安装，每次用 uv 运行
 
 ```bash
-cd app-demo/daily-todo
+cd daily-todo
 uv sync
 uv run python main.py <子命令> [选项]
 ```
 
-### 发布后（可选）
-
-若将项目发布到 PyPI，他人可：
+### 方式三：安装依赖
 
 ```bash
 pip install daily-todo
@@ -77,10 +75,8 @@ pip install daily-todo
 uv tool install daily-todo
 ```
 
-本仓库未发布也可通过 Git 安装（需在仓库根目录或指定子路径）：
-
 ```bash
-pip install -e 'git+https://github.com/你的用户名/ai-demo-collection.git#subdirectory=app-demo/daily-todo'
+daily-todo --help
 ```
 
 ## 命令示例
@@ -114,3 +110,18 @@ uv run python main.py summary weekly --date 2025-02-20
   - `# 日期` 或简短标题
   - `## 任务`：每行 `- [ ]` / `- [x]` / `- [~]` 表示未完成 / 已完成 / 已废弃。
   - 可选：`## 进展`、`## 备注` 等自由文本，供 LLM 总结与生成下一日参考。
+
+示例
+
+```md
+# 2026-02-20
+
+## 任务
+
+- [x] 开发CLI
+- [ ] 发布到PyPI
+
+## 日总结
+
+今日完成开发任务。
+```
