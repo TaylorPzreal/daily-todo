@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "daily-todo"
+version = "0.1.0"
+description = "Daily TODO CLI：Markdown 日程 + LLM 生成/更新/总结"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "typer>=0.12.0",
+    "openai>=1.0.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.scripts]
+daily-todo = "main:app"
+
+[tool.setuptools]
+py-modules = ["main", "cli", "storage", "llm"]
