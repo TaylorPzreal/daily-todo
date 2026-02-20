@@ -18,56 +18,8 @@ Daily TODO CLI：在环境变量指定的目录下管理按日期命名的 Markd
 | `OPENAI_BASE_URL` | 可选。API 地址，例如 `https://api.deepseek.com`。                   |
 | `OPENAI_MODEL`    | 可选。模型名，默认 `gpt-4o-mini`。                                  |
 
-### 本地测试：用 .env 加载配置
 
-在项目根目录（与 `main.py` 同级）新建 `.env`，把环境变量写进去即可，启动时会自动加载，无需在 shell 里 export。
-
-```bash
-# .env 示例
-DAILY_TODO_DIR=/path/to/your/daily-notes
-OPENAI_API_KEY=sk-xxx
-OPENAI_BASE_URL=https://api.deepseek.com
-OPENAI_MODEL=deepseek-chat
-```
-
-## 安装与运行
-
-### 方式一：本机全局命令（源码方式）
-
-在项目目录下**可编辑安装**，之后在任意目录可用 `daily-todo` 命令：
-
-```bash
-cd daily-todo
-uv sync
-uv pip install -e .
-```
-
-或使用 pip：
-
-```bash
-cd daily-todo
-pip install -e .
-```
-
-安装后可直接使用：
-
-```bash
-daily-todo list
-daily-todo generate
-daily-todo update "新增任务xxx"
-```
-
-（依赖当前激活的 Python/venv；若用 `uv run` 进该项目的 venv，需先 `source .venv/bin/activate` 或在该目录下用 `uv run daily-todo ...`。）
-
-### 方式二：不安装，每次用 uv 运行
-
-```bash
-cd daily-todo
-uv sync
-uv run python main.py <子命令> [选项]
-```
-
-### 方式三：安装依赖
+## 安装使用
 
 ```bash
 pip install daily-todo
@@ -75,32 +27,51 @@ pip install daily-todo
 uv tool install daily-todo
 ```
 
+配置 env 到 `.zshrc`，完成后执行一次 `source ~/.zshrc`：
+
+```sh
+cat >> ~/.zshrc << 'EOF'
+
+# daily-todo
+alias dcli=daily-todo
+export OPENAI_BASE_URL=http://localhost:11434/v1
+export OPENAI_API_KEY=ollama
+export OPENAI_MODEL=qwen2.5:7b-instruct
+export DAILY_TODO_DIR="$HOME/.daily-todos"
+EOF
+
+source ~/.zshrc
+```
+
 ```bash
 daily-todo --help
+
+# use alias
+dcli --help
 ```
 
 ## 命令示例
 
 ```bash
 # 根据昨天生成今天的任务并写入今日文件（默认今天）
-uv run python main.py generate
-uv run python main.py generate --date 2025-02-21
+dcli generate
+dcli generate --date 2025-02-21
 
 # 查看今日任务列表与状态
-uv run python main.py list
-uv run python main.py list --date 2025-02-20
+dcli list
+dcli list --date 2025-02-20
 
 # 用自然语言更新当日任务
-uv run python main.py update "完成第1项"
-uv run python main.py update "新增写周报、废弃第3项" --date 2025-02-20
+dcli update "完成第1项"
+dcli update "新增写周报、废弃第3项" --date 2025-02-20
 
 # 日总结（指定日期，默认今天）
-uv run python main.py summary daily
-uv run python main.py summary daily --date 2025-02-20
+dcli summary daily
+dcli summary daily --date 2025-02-20
 
 # 周总结（过去 7 天，默认到今天）
-uv run python main.py summary weekly
-uv run python main.py summary weekly --date 2025-02-20
+dcli summary weekly
+dcli summary weekly --date 2025-02-20
 ```
 
 ## 每日文件格式
@@ -111,7 +82,7 @@ uv run python main.py summary weekly --date 2025-02-20
   - `## 任务`：每行 `- [ ]` / `- [x]` / `- [~]` 表示未完成 / 已完成 / 已废弃。
   - 可选：`## 进展`、`## 备注` 等自由文本，供 LLM 总结与生成下一日参考。
 
-示例
+示例：
 
 ```md
 # 2026-02-20
@@ -125,3 +96,18 @@ uv run python main.py summary weekly --date 2025-02-20
 
 今日完成开发任务。
 ```
+
+## Development
+
+### 本机调试
+
+```bash
+cd daily-todo
+uv sync
+
+cp env.example .env
+
+uv run python main.py generate   # 或 list / update / summary 等
+```
+
+内容参考项目根目录 `env.example`，按需改成本地路径与 API 配置即可。
